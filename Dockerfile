@@ -1,16 +1,12 @@
-FROM centos:latest
+FROM jbrooker/clang-toolchain:latest
 MAINTAINER Jonathan Brooker <jonathan.brooker@gmail.com>
 
+RUN apt-get install -yy --no-install-recommends libboost-test-dev
 COPY . /home/cpp-template
-
-RUN yum update -y \
- && yum group install -y "Development Tools" \
- && yum install -y cmake boost-devel boost-static boost openssl-devel
-
 WORKDIR /home/cpp-template
-
 RUN cd build \
  && rm -rf * \
- && cmake .. \
- && make     \
- && make test
+ && cmake -DCMAKE_BUILD_TYPE=Release .. \
+ && scan-build make \
+ && make test CTEST_OUTPUT_ON_FAILURE=TRUE 
+
