@@ -13,17 +13,27 @@ do
         ;;
     esac
 done
+shift $((OPTIND-1))
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 [-i] SOURCE_DIR"
+    exit 1
+fi
+
+SOURCE_DIR=$1
+
+CLANG_FORMAT=`find $SOURCE_DIR -name .clang-format`
+if [ ! -f $CLANG_FORMAT ]; then
+    echo WARN: No .clang-format found in $SOURCE_DIR
+fi
 
 # Find sources
-TEST_DIR=`dirname $0`
-BUILD_DIR="$TEST_DIR"/../build
-SOURCE_DIR="$TEST_DIR"/../src
-TMP_FILENAME=`cat /dev/urandom | tr -dc [:alnum:] | fold -w 10 | head -n 1`
-TMP_FILENAME="$BUILD_DIR/$TMP_FILENAME"
+BUILD_DIR="$PWD"
+TMP_FILENAME=`mktemp`
 
 RETURN_CODE=0
 
-for SOURCE_FILE in `find "$SOURCE_DIR" "$TEST_DIR" -name "*.cpp" -o -name "*.h"` 
+for SOURCE_FILE in `find "$SOURCE_DIR" -name "*.cpp" -o -name "*.h"` 
 do
     # In-place formatting
     if [ $INPLACE -eq 1 ]; then
@@ -46,7 +56,7 @@ done
 
 if [ $RETURN_CODE -ne 0 ]; then
     echo "The above files do not meet the coding standards."
-    echo "Please run clang-format -style=file -i [FILE] to remediate."
+    echo "Please run $0 -i to remediate."
 fi
 
 exit $RETURN_CODE
