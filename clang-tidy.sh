@@ -13,7 +13,7 @@ if [ "$CLANG_TIDY" == "" ]; then
 fi
 
 # Find sources
-SOURCE_DIR=$1
+SOURCE_DIR=`readlink -f $1`/
 BUILD_DIR=$2
 TMP_FILENAME=`mktemp`
 
