@@ -1,25 +1,19 @@
-[![Build Status](https://travis-ci.org/jbrooker/cpp-template.svg?branch=master)](https://travis-ci.org/jbrooker/cpp-template)
 
-# cpp-template
+# cpp-quality
 
-A skeleton project for c++ projects, based on cmake.
+A docker container for performing quality assurance on c++ projects
 
-Includes 
-* CMakeLists.txt with targets for a library, executable, and unit tests
-* Coding standards expressed as a .clang-format file
-* Travis CI config in .travis.yml with OS X and Linux/Docker targets
+Includes:
+* Address, thread and undefined behaviour sanitizer builds
+* clang-format format checking
+* Scan-build static analysis
+* clang-tidy coding style checker
 
-## Example
+# Example
 
-Run [bin/template](src/main.cpp)
-
-```
-cd build
-cmake ..
-make
-../bin/template
-Hello, world!
-```
+docker run -v /my/source:/work/source \
+           -v /my/build:/work/build \
+           -it jbrooker/cpp-quality
 
 ## License
 

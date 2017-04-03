@@ -20,12 +20,14 @@ if [ ! -f $SANITIZER_BLACKLIST ]; then
 fi
 
 export ASAN_SYMBOLIZER_PATH=`locate llvm-symbolizer | egrep "llvm-symbolizer$"`
+export ASAN_OPTIONS=symbolize=1
 
 echo Configuring build \
  && cmake -DCMAKE_CXX_FLAGS="-O1 -fsanitize=address,undefined \
     -DCMAKE_CXX_COMPILER="$CXX" \
     -fsanitize-blacklist=$SANITIZER_BLACKLIST \
-    -fno-omit-frame-pointer" -DCMAKE_BUILD_TYPE=Debug $SOURCE_DIR \
+    -fno-omit-frame-pointer -fno-optimize-sibling-calls" \
+    -DCMAKE_BUILD_TYPE=Debug $SOURCE_DIR \
  && echo Running clang-format && $TOOLS_DIR/clang-format.sh $SOURCE_DIR \
  && echo Building with address and undefined behaviour sanitizers \
  && echo Running scan-build && time scan-build make -j $CPUS \
