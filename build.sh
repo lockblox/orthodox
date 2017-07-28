@@ -16,8 +16,9 @@ export CXX=`which clang++`
 SANITIZER_BLACKLIST=$SOURCE_DIR/test/sanitizer-blacklist.txt
 if [ ! -f $SANITIZER_BLACKLIST ]; then
     echo WARN: No sanitizer blacklist at $SANITIZER_BLACKLIST
-    SANITIZER_BLACKLIST=`mktemp`
+    SANITIZER_BLACKLIST=$TOOLS_DIR/test/sanitizer-blacklist.txt
 fi
+echo INFO: Using blacklist at $SANITIZER_BLACKLIST
 
 export ASAN_SYMBOLIZER_PATH=`locate llvm-symbolizer | egrep "llvm-symbolizer$"`
 export ASAN_OPTIONS=symbolize=1
