@@ -25,7 +25,6 @@ export ASAN_OPTIONS=symbolize=1
 
 echo Configuring build \
  && cmake -DCMAKE_CXX_FLAGS="-O1 -fsanitize=address,undefined \
-    -DCMAKE_CXX_COMPILER="$CXX" \
     -fsanitize-blacklist=$SANITIZER_BLACKLIST \
     -fno-omit-frame-pointer -fno-optimize-sibling-calls" \
     -DCMAKE_BUILD_TYPE=Debug $SOURCE_DIR \
