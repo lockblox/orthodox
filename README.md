@@ -1,5 +1,5 @@
 
-# cpp-quality
+# orthodox
 
 A docker container for performing quality assurance on c++ projects
 
@@ -13,8 +13,13 @@ Includes:
 
 docker run -v /my/source:/work/source \
            -v /my/build:/work/build \
-           -it jbrooker/cpp-quality
+           -it campx/orthodox
 
 ## License
 
 MIT
+
+## ROADMAP
+
+* include-what-you-use
+* fuzzing
