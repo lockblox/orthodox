@@ -7,9 +7,11 @@ fi
 
 TOOLS_DIR=`dirname $0`
 TOOLS_DIR=`readlink -f $TOOLS_DIR`
-SOURCE_DIR=`readlink -f $1`/
+SOURCE_DIR=`readlink -f $1`
+ROOT_DIR=`dirname $1`
 CPUS=`lscpu | egrep "^CPU\(s\): *[0-9]" | tr -s " " | cut -d " " -f 2`
 echo Source directory is $SOURCE_DIR
+echo Root directory is $ROOT_DIR
 
 export CXX=`which clang++`
 
@@ -27,7 +29,7 @@ echo Configuring build \
  && cmake -DCMAKE_CXX_FLAGS="-O1 -fsanitize=address,undefined \
     -fsanitize-blacklist=$SANITIZER_BLACKLIST \
     -fno-omit-frame-pointer -fno-optimize-sibling-calls" \
-    -DCMAKE_BUILD_TYPE=Debug $SOURCE_DIR \
+    -DCMAKE_BUILD_TYPE=Debug $ROOT_DIR \
  && echo Running clang-format && $TOOLS_DIR/clang-format.sh $SOURCE_DIR \
  && echo Building with address and undefined behaviour sanitizers \
  && echo Running scan-build && time scan-build make -j $CPUS \
@@ -36,12 +38,12 @@ echo Configuring build \
  && echo Running clang-tidy && $TOOLS_DIR/clang-tidy.sh $SOURCE_DIR . \
  && cmake -DCMAKE_CXX_FLAGS="-O1 -fsanitize=thread -fno-omit-frame-pointer" \
     -fsanitize-blacklist=$SANITIZER_BLACKLIST \
-    -DCMAKE_BUILD_TYPE=Debug $SOURCE_DIR \
+    -DCMAKE_BUILD_TYPE=Debug $ROOT_DIR \
  && make -j $CPUS clean \
  && echo Building with thread sanitizer \
  && time make -j $CPUS \
  && echo Running tests with thread sanitizer \
  && time make test CTEST_OUTPUT_ON_FAILURE=TRUE \
  && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="--coverage" \
-    $SOURCE_DIR \
+    $ROOT_DIR \
  && echo Running production build && time make -j $CPUS
