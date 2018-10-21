@@ -1,14 +1,14 @@
 #!/bin/bash
 
-if [ $# -ne 1 ]; then
-    echo "Usage: build.sh [SOURCE_DIR]"
+if [ $# -ne 2 ]; then
+    echo "Usage: build.sh [SOURCE_DIR] [ROOT_DIR]"
     exit 1
 fi
 
 TOOLS_DIR=`dirname $0`
 TOOLS_DIR=`readlink -f $TOOLS_DIR`
 SOURCE_DIR=`readlink -f $1`
-ROOT_DIR=`dirname $1`
+ROOT_DIR=`readlink -f $2`
 CPUS=`lscpu | egrep "^CPU\(s\): *[0-9]" | tr -s " " | cut -d " " -f 2`
 echo Source directory is $SOURCE_DIR
 echo Root directory is $ROOT_DIR
