@@ -13,4 +13,4 @@ RUN apt-get update \
 
 COPY . /home/quality
 WORKDIR /work/build
-ENTRYPOINT /home/quality/build.sh
+ENTRYPOINT /home/quality/build.sh /work/source
