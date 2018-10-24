@@ -11,6 +11,6 @@ RUN apt-get update \
  && apt-get -y clean \
  && updatedb
 
-COPY . /home/quality
-WORKDIR /work/build
-ENTRYPOINT /home/quality/build.sh /work/source
+COPY . /opt/orthodox
+WORKDIR /root/build
+ENTRYPOINT /opt/orthodox/build.sh /root/src
