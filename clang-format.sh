@@ -34,7 +34,7 @@ fi
 TMP_FILENAME=`mktemp`
 
 RETURN_CODE=0
-
+SUBMODULES=`git -C ${SOURCE_DIR} submodule | sed 's/^ *//g' | cut -d " " -f 2`
 for CPP_FILE in `grep '"file": ' ${BUILD_DIR}/compile_commands.json \
     | sed 's/^ *//g' | cut -d":" -f 2 | sed 's/^ *//g;s/^\"//g;s/\"$//g'`
 do
@@ -46,8 +46,7 @@ do
             continue
         fi
         IS_EXTERNAL=0
-        for MODULE in `git -C ${SOURCE_DIR} submodule | sed 's/^ *//g' \
-                       | cut -d " " -f 2`
+        for MODULE in ${SUBMODULES}
         do
             echo ${SOURCE_FILE} | grep ${MODULE} >/dev/null
             if [ $? -eq 0 ];
