@@ -1,5 +1,4 @@
 FROM ubuntu:18.04
-MAINTAINER Jonathan Brooker <jonathan.brooker@gmail.com>
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
