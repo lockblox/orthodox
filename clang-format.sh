@@ -24,10 +24,10 @@ SOURCE_DIR=$1
 BUILD_DIR=$2
 
 CLANG_FORMAT=`find ${SOURCE_DIR} -name .clang-format`
-if [ ! -f ${CLANG_FORMAT} ]; then
-    echo WARN: No .clang-format found in ${SOURCE_DIR}
-else
+if [ "${CLANG_FORMAT}" != "" -a -f "${CLANG_FORMAT}" ]; then
     echo INFO: Using ${CLANG_FORMAT}
+else
+    echo WARN: No .clang-format found in ${SOURCE_DIR}
 fi
 
 # Find sources
