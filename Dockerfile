@@ -13,4 +13,4 @@ RUN apt-get update \
 ENV PATH="/usr/lib/ccache:${PATH}"
 COPY . /opt/orthodox
 WORKDIR /root/build
-ENTRYPOINT /opt/orthodox/build.sh /root/src
+ENTRYPOINT bash /opt/orthodox/build.sh /root/src
