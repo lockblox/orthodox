@@ -60,4 +60,7 @@ echo Configuring build \
  && time make test CTEST_OUTPUT_ON_FAILURE=TRUE \
  && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="--coverage" \
     ${ROOT_DIR} \
- && echo Running production build && time make -j ${CPUS}
+ && echo Building with coverage \
+ && time make -j ${CPUS} \
+ && echo Running tests with coverage \
+ && time make test CTEST_OUTPUT_ON_FAILURE=TRUE
