@@ -50,16 +50,18 @@ echo Configuring build \
  && echo Running tests with address and undefined behaviour sanitizers \
  && time make test CTEST_OUTPUT_ON_FAILURE=TRUE \
  && echo Running clang-tidy && ${TOOLS_DIR}/clang-tidy.sh ${SOURCE_DIR} . \
- && cmake -DCMAKE_CXX_FLAGS="-O1 -fsanitize=thread -fno-omit-frame-pointer" \
-    -fsanitize-blacklist=${SANITIZER_BLACKLIST} \
+ && cmake -DCMAKE_CXX_FLAGS="-O1 -fsanitize=thread -fno-omit-frame-pointer \
+    -fsanitize-blacklist=${SANITIZER_BLACKLIST}" \
     -DCMAKE_BUILD_TYPE=Debug ${ROOT_DIR} \
  && make -j ${CPUS} clean \
  && echo Building with thread sanitizer \
  && time make -j ${CPUS} \
  && echo Running tests with thread sanitizer \
  && time make test CTEST_OUTPUT_ON_FAILURE=TRUE \
- && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" \
-    -DCMAKE_CXX_COMPILER=/usr/bin/clang++ ${ROOT_DIR} \
+ && cmake \
+    -DCMAKE_CXX_FLAGS="-O0 --coverage" \
+    -DCMAKE_BUILD_TYPE=Debug \
+    ${ROOT_DIR} \
  && echo Building with coverage \
  && time make -j ${CPUS} \
  && echo Running tests with coverage \
