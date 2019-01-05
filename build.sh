@@ -58,9 +58,8 @@ echo Configuring build \
  && time make -j ${CPUS} \
  && echo Running tests with thread sanitizer \
  && time make test CTEST_OUTPUT_ON_FAILURE=TRUE \
- && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" \
-    -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
-    ${ROOT_DIR} \
+ && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage -O0" \
+    -DCMAKE_CXX_COMPILER=/usr/bin/clang++ ${ROOT_DIR} \
  && echo Building with coverage \
  && time make -j ${CPUS} \
  && echo Running tests with coverage \
