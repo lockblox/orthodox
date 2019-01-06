@@ -8,7 +8,8 @@ RUN apt-get update \
     ccache liblmdb-dev gdb llvm locate \
  && apt-get -y autoremove \
  && apt-get -y clean \
- && updatedb
+ && updatedb \
+ && pip install --user cpp-coveralls
 
 ENV PATH="/usr/lib/ccache:${PATH}"
 COPY . /opt/orthodox
