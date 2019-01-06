@@ -58,7 +58,7 @@ echo Configuring build \
  && time make -j ${CPUS} \
  && echo Running tests with thread sanitizer \
  && time make test CTEST_OUTPUT_ON_FAILURE=TRUE \
- && mkdir ${SOURCE_DIR}/build \
+ && test -d ${SOURCE_DIR}/build || mkdir ${SOURCE_DIR}/build \
  && cd ${SOURCE_DIR}/build \
  && cmake \
     -DCMAKE_CXX_FLAGS="-O0 --coverage" \
