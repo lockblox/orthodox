@@ -11,8 +11,6 @@ RUN apt-get update \
     xz-utils \
     python \
     python-pip \
-    python-setuptools \
-    python-requests \
     git \
     gdb \
     llvm \
@@ -28,10 +26,15 @@ RUN apt-get update \
     liblmdb-dev \
  && apt-get -y autoremove \
  && apt-get -y clean \
- && updatedb \
- && pip install --user cpp-coveralls
+ && updatedb
 
-ENV PATH="/root/.local/bin:/usr/lib/ccache:${PATH}"
+RUN python -m pip install --upgrade pip \
+ && pip install requests \
+ && pip install setuptools \
+ && pip install wheel \
+ && pip install cpp-coveralls
+
+ENV PATH="/usr/lib/ccache:${PATH}"
 COPY . /opt/orthodox
 WORKDIR /root/build
 ENTRYPOINT bash /opt/orthodox/build.sh /root/src
