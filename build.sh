@@ -58,6 +58,8 @@ echo Configuring build \
  && time make -j ${CPUS} \
  && echo Running tests with thread sanitizer \
  && time make test CTEST_OUTPUT_ON_FAILURE=TRUE \
+ && mkdir ${SOURCE_DIR}/build \
+ && cd ${SOURCE_DIR}/build \
  && cmake \
     -DCMAKE_CXX_FLAGS="-O0 --coverage" \
     -DCMAKE_BUILD_TYPE=Debug \
@@ -65,4 +67,7 @@ echo Configuring build \
  && echo Building with coverage \
  && time make -j ${CPUS} \
  && echo Running tests with coverage \
- && time make test CTEST_OUTPUT_ON_FAILURE=TRUE
+ && time make test CTEST_OUTPUT_ON_FAILURE=TRUE \
+ && cd ${SOURCE_DIR} \
+ && coveralls --gcov llvm-cov --gcov-options gcov --verbose \
+              -E ".*gtest.*" -E ".*CMakeFiles.*"
