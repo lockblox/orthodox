@@ -70,4 +70,5 @@ echo Configuring build \
  && time make test CTEST_OUTPUT_ON_FAILURE=TRUE \
  && cd ${SOURCE_DIR} \
  && coveralls --gcov llvm-cov --gcov-options gcov --verbose \
-              -E ".*gtest.*" -E ".*CMakeFiles.*"
+              -E ".*gtest.*" -E ".*CMakeFiles.*" \
+ || true
