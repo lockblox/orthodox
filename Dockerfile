@@ -2,10 +2,30 @@ FROM ubuntu:18.04
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-    build-essential wget rsync cmake pkg-config perl-modules \
-    libdigest-md5-file-perl xz-utils python \
-    clang clang-tidy clang-format clang-tools git libstdc++-6-dev libssl-dev \
-    ccache liblmdb-dev gdb llvm locate python-pip python-setuptools \
+    build-essential \
+    wget \
+    rsync \
+    locate \
+    pkg-config \
+    perl-modules \
+    xz-utils \
+    python \
+    python-pip \
+    python-setuptools \
+    python-requests \
+    git \
+    gdb \
+    llvm \
+    cmake \
+    ccache \
+    clang \
+    clang-tidy \
+    clang-format \
+    clang-tools \
+    libdigest-md5-file-perl \
+    libstdc++-6-dev \
+    libssl-dev \
+    liblmdb-dev \
  && apt-get -y autoremove \
  && apt-get -y clean \
  && updatedb \
