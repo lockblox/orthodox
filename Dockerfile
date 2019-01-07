@@ -34,7 +34,10 @@ RUN python -m pip install --upgrade pip \
  && pip install wheel \
  && pip install cpp-coveralls
 
+RUN useradd -ms /bin/bash travis
+USER travis
+WORKDIR /home/travis
+
 ENV PATH="/usr/lib/ccache:${PATH}"
 COPY . /opt/orthodox
-WORKDIR /root/build
-ENTRYPOINT bash /opt/orthodox/build.sh /root/src
+ENTRYPOINT bash /opt/orthodox/build.sh /home/travis/src

@@ -4,9 +4,9 @@
 
 TOOLS_DIR=`dirname $0`
 TOOLS_DIR=`readlink -f ${TOOLS_DIR}`
-SOURCE_DIR=/root/src
+SOURCE_DIR=/home/travis/src
 ROOT_DIR=${SOURCE_DIR}
-BUILD_DIR=/root/build
+BUILD_DIR=/home/travis/build
 
 if [ $# -gt 0 ]; then
     SOURCE_DIR=`readlink -f $1`
@@ -23,6 +23,9 @@ echo Tools directory is ${TOOLS_DIR}
 echo Source directory is ${SOURCE_DIR}
 echo Root directory is ${ROOT_DIR}
 echo Build directory is ${BUILD_DIR}
+
+test -d ${SOURCE_DIR}/build || mkdir -v ${SOURCE_DIR}/build
+test -d ${BUILD_DIR} || mkdir -v ${BUILD_DIR}
 cd ${BUILD_DIR}
 
 export CXX=`which clang++`
@@ -58,7 +61,6 @@ echo Configuring build \
  && time make -j ${CPUS} \
  && echo Running tests with thread sanitizer \
  && time make test CTEST_OUTPUT_ON_FAILURE=TRUE \
- && test -d ${SOURCE_DIR}/build || mkdir ${SOURCE_DIR}/build \
  && cd ${SOURCE_DIR}/build \
  && cmake \
     -DCMAKE_CXX_FLAGS="-O0 --coverage" \
