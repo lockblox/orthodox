@@ -20,6 +20,7 @@ RUN apt-get update \
     clang-tidy \
     clang-format \
     clang-tools \
+    ninja-build \
     libdigest-md5-file-perl \
     libstdc++-6-dev \
     libssl-dev \
@@ -34,10 +35,7 @@ RUN python -m pip install --upgrade pip \
  && pip install wheel \
  && pip install cpp-coveralls
 
-RUN useradd -ms /bin/bash travis
-USER travis
-WORKDIR /home/travis
-
+WORKDIR /root/build
 ENV PATH="/usr/lib/ccache:${PATH}"
 COPY . /opt/orthodox
-ENTRYPOINT bash /opt/orthodox/build.sh /home/travis/src
+ENTRYPOINT bash /opt/orthodox/build.sh /root/src
