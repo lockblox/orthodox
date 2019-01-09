@@ -88,6 +88,6 @@ echo Configuring build \
  && time ninja -v test \
  && cd ${SOURCE_DIR} \
  && coveralls --gcov llvm-cov --gcov-options gcov --verbose \
-              -E ".*gtest.*" -E ".*CMakeFiles.*" -i multihash \
+              -E ".*gtest.*" -E ".*CMake.*" \
               --build-root build \
  || true
