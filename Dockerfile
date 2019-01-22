@@ -33,6 +33,7 @@ RUN python -m pip install --upgrade pip \
  && pip install requests \
  && pip install setuptools \
  && pip install wheel \
+ && pip install pyyaml \
  && pip install cpp-coveralls
 
 WORKDIR /root/build

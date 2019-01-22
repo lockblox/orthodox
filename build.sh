@@ -57,7 +57,9 @@ echo Configuring build \
  && cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ${ROOT_DIR} \
     -DCMAKE_CXX_COMPILER=/usr/share/clang/scan-build-6.0/libexec/c++-analyzer \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
- && echo Running scan-build && time scan-build ninja -v \
+ && echo Running scan-build \
+ && time scan-build -o ${BUILD_DIR}/scan-build -V ninja -v \
+ && test `ls -1 ${BUILD_DIR}/scan-build | wc -l` -eq 0 \
  && echo Running clang-format && ${TOOLS_DIR}/clang-format.sh ${SOURCE_DIR} \
     ${BUILD_DIR} \
  && rm -rf ${BUILD_DIR}/CMake* \
@@ -68,7 +70,8 @@ echo Configuring build \
  && time ninja -v \
  && echo Running tests with address and undefined behaviour sanitizers \
  && time ninja -v test \
- && echo Running clang-tidy && ${TOOLS_DIR}/clang-tidy.sh ${SOURCE_DIR} . \
+ && echo Running clang-tidy \
+ && ${TOOLS_DIR}/clang-tidy.sh ${SOURCE_DIR} ${BUILD_DIR} \
  && cmake -GNinja -DCMAKE_CXX_FLAGS="${TSAN_FLAGS}" \
     -DCMAKE_BUILD_TYPE=Debug ${ROOT_DIR} \
  && ninja clean \
