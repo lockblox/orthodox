@@ -5,9 +5,12 @@ RUN apt-get update \
     build-essential \
     wget \
     rsync \
+    curl \
     locate \
     pkg-config \
     perl-modules \
+    unzip \
+    tar \
     xz-utils \
     python \
     python-pip \
@@ -27,14 +30,18 @@ RUN apt-get update \
     liblmdb-dev \
  && apt-get -y autoremove \
  && apt-get -y clean \
- && updatedb
-
-RUN python -m pip install --upgrade pip \
+ && updatedb \
+ && python -m pip install --upgrade pip \
  && pip install requests \
  && pip install setuptools \
  && pip install wheel \
  && pip install pyyaml \
- && pip install cpp-coveralls
+ && pip install cpp-coveralls \
+ && git clone https://github.com/Microsoft/vcpkg.git \
+ && cd vcpkg \
+ && ./bootstrap-vcpkg.sh \
+ && ./vcpkg integrate install \
+ && ./vcpkg install gtest
 
 WORKDIR /root/build
 ENV PATH="/usr/lib/ccache:${PATH}"
