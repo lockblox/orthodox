@@ -36,12 +36,7 @@ RUN apt-get update \
  && pip install setuptools \
  && pip install wheel \
  && pip install pyyaml \
- && pip install cpp-coveralls \
- && git clone https://github.com/Microsoft/vcpkg.git \
- && cd vcpkg \
- && ./bootstrap-vcpkg.sh \
- && ./vcpkg integrate install \
- && ./vcpkg install gtest
+ && pip install cpp-coveralls
 
 WORKDIR /root/build
 ENV PATH="/usr/lib/ccache:${PATH}"
