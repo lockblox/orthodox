@@ -57,7 +57,7 @@ echo Configuring build \
  && cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ${ROOT_DIR} \
     -DCMAKE_CXX_COMPILER=/usr/share/clang/scan-build-6.0/libexec/c++-analyzer \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
-    -DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/buildsystems/vcpkg.cmake \
+    ${CMAKE_CONFIG_ARGS} \
  && echo Running scan-build \
  && time scan-build -o ${BUILD_DIR}/scan-build -V ninja -v \
  && test `ls -1 ${BUILD_DIR}/scan-build | wc -l` -eq 0 \
@@ -68,7 +68,7 @@ echo Configuring build \
  && cmake -GNinja -DCMAKE_CXX_FLAGS="${ASAN_FLAGS}" \
     -DCMAKE_BUILD_TYPE=Debug ${ROOT_DIR} \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
-    -DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/buildsystems/vcpkg.cmake \
+    ${CMAKE_CONFIG_ARGS} \
  && time ninja -v \
  && echo Running tests with address and undefined behaviour sanitizers \
  && time ninja -v test \
@@ -76,7 +76,7 @@ echo Configuring build \
  && ${TOOLS_DIR}/clang-tidy.sh ${SOURCE_DIR} ${BUILD_DIR} \
  && cmake -GNinja -DCMAKE_CXX_FLAGS="${TSAN_FLAGS}" \
     -DCMAKE_BUILD_TYPE=Debug ${ROOT_DIR} \
-    -DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/buildsystems/vcpkg.cmake \
+    ${CMAKE_CONFIG_ARGS} \
  && ninja clean \
  && echo Building with thread sanitizer \
  && time ninja -v \
@@ -87,7 +87,7 @@ echo Configuring build \
     -GNinja \
     -DCMAKE_CXX_FLAGS="-O0 --coverage" \
     -DCMAKE_BUILD_TYPE=Debug \
-    -DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/buildsystems/vcpkg.cmake \
+    ${CMAKE_CONFIG_ARGS} \
     ${ROOT_DIR} \
  && echo Building with coverage \
  && time ninja -v \
