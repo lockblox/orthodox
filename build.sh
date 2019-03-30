@@ -96,5 +96,4 @@ echo Configuring build \
  && cd ${SOURCE_DIR} \
  && coveralls --gcov llvm-cov --gcov-options gcov --verbose \
               -E ".*gtest.*" -E ".*CMake.*" -E ".*test\/" \
-              --build-root build \
- || true
+              --build-root build
