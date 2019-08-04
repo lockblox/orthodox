@@ -28,15 +28,19 @@ test -d ${SOURCE_DIR}/build || mkdir -v ${SOURCE_DIR}/build
 test -d ${BUILD_DIR} || mkdir -v ${BUILD_DIR}
 cd ${BUILD_DIR}
 
-
-export CC=`which clang`
-export CXX=`which clang++`
-export CCC_CC=/usr/bin/clang
-export CCC_CXX=/usr/bin/clang++
+export CC=clang
+export CXX=clang++
+export CCC_CC=${CC}
+export CCC_CXX=${CXX}
 export LSAN_OPTIONS=verbosity=1:log_threads=1
-export ASAN_SYMBOLIZER_PATH=`locate llvm-symbolizer | egrep "llvm-symbolizer$"`
+export ASAN_SYMBOLIZER=`locate llvm-symbolizer | egrep "llvm-symbolizer$"`
 export ASAN_OPTIONS=symbolize=1
 export CTEST_OUTPUT_ON_FAILURE=1
+export ANALYZER=`locate c++-analyzer | egrep "c\+\+-analyzer$" | head -1`
+export SCAN_BUILD=`locate scan-build | egrep "scan-build$" | head -1`
+export VCPKG_TOOLCHAIN="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake"
+export CMAKE_TOOLCHAIN="-DCMAKE_TOOLCHAIN_FILE=${VCPKG_TOOLCHAIN}"
+export CMAKE_CONFIG_ARGS="${CMAKE_TOOLCHAIN} ${CMAKE_CONFIG_ARGS}"
 
 SANITIZER_BLACKLIST=${SOURCE_DIR}/test/sanitizer-blacklist.txt
 if [ ! -f ${SANITIZER_BLACKLIST} ]; then
@@ -55,11 +59,11 @@ echo Using ASAN flags: ${ASAN_FLAGS}
 
 echo Configuring build \
  && cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ${ROOT_DIR} \
-    -DCMAKE_CXX_COMPILER=/usr/share/clang/scan-build-6.0/libexec/c++-analyzer \
+    -DCMAKE_CXX_COMPILER=${ANALYZER} \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
     ${CMAKE_CONFIG_ARGS} \
  && echo Running scan-build \
- && time scan-build -o ${BUILD_DIR}/scan-build -V ninja -v \
+ && time ${SCAN_BUILD} -o ${BUILD_DIR}/scan-build -V ninja -v \
  && test `ls -1 ${BUILD_DIR}/scan-build | wc -l` -eq 0 \
  && echo Running clang-format && ${TOOLS_DIR}/clang-format.sh ${SOURCE_DIR} \
     ${BUILD_DIR} \
