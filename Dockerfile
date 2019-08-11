@@ -23,6 +23,7 @@ RUN apt-get update \
     g++-${GCC_VERSION} \
     git \
     gdb \
+    gcovr \
     llvm \
     cmake \
     ccache \

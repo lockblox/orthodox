@@ -98,6 +98,7 @@ echo Configuring build \
  && echo Running tests with coverage \
  && time ninja -v test \
  && cd ${SOURCE_DIR} \
- && coveralls --gcov llvm-cov --gcov-options gcov --verbose \
+ && (coveralls --gcov llvm-cov --gcov-options gcov --verbose \
               -E ".*gtest.*" -E ".*CMake.*" -E ".*test\/" \
-              --build-root build
+              --build-root build \
+ || gcovr -r /root --gcov-executable="llvm-cov gcov")
