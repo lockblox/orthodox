@@ -33,7 +33,7 @@ export CXX=clang++
 export CCC_CC=${CC}
 export CCC_CXX=${CXX}
 export LSAN_OPTIONS=verbosity=1:log_threads=1
-export ASAN_SYMBOLIZER=`locate llvm-symbolizer | egrep "llvm-symbolizer$"`
+export ASAN_SYMBOLIZER_PATH=`locate llvm-symbolizer | egrep "llvm-symbolizer$" | head -1`
 export ASAN_OPTIONS=symbolize=1
 export CTEST_OUTPUT_ON_FAILURE=1
 export ANALYZER=`locate c++-analyzer | egrep "c\+\+-analyzer$" | head -1`
