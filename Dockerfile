@@ -25,7 +25,6 @@ RUN apt-get update \
     gdb \
     gcovr \
     llvm \
-    cmake \
     ccache \
     clang-${CLANG_VERSION} \
     clang-tidy-${CLANG_VERSION} \
@@ -50,6 +49,13 @@ RUN python -m pip install --upgrade pip \
  && pip install wheel \
  && pip install pyyaml \
  && pip install cpp-coveralls
+
+RUN wget https://cmake.org/files/v3.15/cmake-3.15.0-Linux-x86_64.sh  \
+&& mkdir /opt/cmake \
+&& sh cmake-3.15.0-Linux-x86_64.sh --prefix=/opt/cmake --skip-license \
+&& ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake \
+&& rm cmake-3.15.0-Linux-x86_64.sh \
+&& cmake --version
 
 RUN mkdir ${VCPKG_ROOT} \
  && cd ${VCPKG_ROOT} \
