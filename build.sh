@@ -101,4 +101,6 @@ echo Configuring build \
  && (coveralls --gcov llvm-cov --gcov-options gcov --verbose \
               -E ".*gtest.*" -E ".*CMake.*" -E ".*test\/" \
               --build-root build \
- || gcovr -r /root --gcov-executable="llvm-cov gcov")
+ || gcovr -r /root --gcov-executable="llvm-cov gcov") \
+ && cd ${BUILD_DIR} \
+ && ninja install
