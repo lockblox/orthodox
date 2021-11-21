@@ -8,7 +8,7 @@ fi
 
 CLANG_TIDY=`locate run-clang-tidy.py 2>/dev/null`
 
-for SEARCH_PATH in /usr/bin/;
+for SEARCH_PATH in /usr/bin/ /usr/share/clang;
 do
     if [ "$CLANG_TIDY" == "" ]; then
         CLANG_TIDY=`ls $SEARCH_PATH/run-clang-tidy*.py | head -1`
