@@ -15,6 +15,7 @@ RUN apt-get update \
     perl-modules \
     unzip \
     tar \
+    zip \
     vim \
     xz-utils \
     python \
