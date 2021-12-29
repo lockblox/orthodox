@@ -1,32 +1,43 @@
 #!/bin/bash
 
-# Usage: build.sh [SOURCE_DIR] [BUILD_DIR] [ROOT_DIR]
+# Usage: build.sh [SOURCEDIR] [BUILDDIR] [ROOT_DIR]
 
 TOOLS_DIR=`dirname $0`
 TOOLS_DIR=`readlink -f ${TOOLS_DIR}`
-SOURCE_DIR=/root/src
-ROOT_DIR=${SOURCE_DIR}
-BUILD_DIR=/root/build
+
+if [ "${BUILDDIR}" == "" ];
+then
+   export BUILDDIR=/var/tmp/build
+fi
+
+echo Source directory is ${SOURCEDIR}
+
+if [ "${SOURCEDIR}" == "" ];
+then
+   export SOURCEDIR=/usr/local/src
+fi
+
+export ROOT_DIR=${SOURCEDIR}
 
 if [ $# -gt 0 ]; then
-    SOURCE_DIR=`readlink -f $1`
+    export SOURCEDIR=`readlink -f $1`
 fi
 if [ $# -gt 1 ]; then
-    BUILD_DIR=`readlink -f $2`
+    export BUILDDIR=`readlink -f $2`
 fi
 if [ $# -gt 2 ]; then
-    ROOT_DIR=`readlink -f $3`
+    export ROOT_DIR=`readlink -f $3`
 fi
 
 CPUS=`lscpu | egrep "^CPU\(s\): *[0-9]" | tr -s " " | cut -d " " -f 2`
 echo Tools directory is ${TOOLS_DIR}
-echo Source directory is ${SOURCE_DIR}
+echo Source directory is ${SOURCEDIR}
 echo Root directory is ${ROOT_DIR}
-echo Build directory is ${BUILD_DIR}
+echo Build directory is ${BUILDDIR}
 
-test -d ${SOURCE_DIR}/build || mkdir -v ${SOURCE_DIR}/build
-test -d ${BUILD_DIR} || mkdir -v ${BUILD_DIR}
-cd ${BUILD_DIR}
+test -d ${SOURCEDIR}/build || mkdir -v ${SOURCEDIR}/build
+test -d ${BUILDDIR} || mkdir -v ${BUILDDIR}
+cd ${BUILDDIR}
 
 export CC=clang
 export CXX=clang++
@@ -38,11 +49,13 @@ export ASAN_OPTIONS=symbolize=1
 export CTEST_OUTPUT_ON_FAILURE=1
 export ANALYZER=`locate c++-analyzer | egrep "c\+\+-analyzer$" | head -1`
 export SCAN_BUILD=`locate scan-build | egrep "scan-build$" | head -1`
-export VCPKG_TOOLCHAIN="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake"
+export VCPKG_TOOLCHAIN="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
 export CMAKE_TOOLCHAIN="-DCMAKE_TOOLCHAIN_FILE=${VCPKG_TOOLCHAIN}"
 export CMAKE_CONFIG_ARGS="${CMAKE_TOOLCHAIN} ${CMAKE_CONFIG_ARGS}"
 
-SANITIZER_BLACKLIST=${SOURCE_DIR}/test/sanitizer-blacklist.txt
+${TOOLS_DIR}/cpp-check.sh
+
+SANITIZER_BLACKLIST=${SOURCEDIR}/test/sanitizer-blacklist.txt
 if [ ! -f ${SANITIZER_BLACKLIST} ]; then
     echo WARN: No sanitizer blacklist at ${SANITIZER_BLACKLIST}
     SANITIZER_BLACKLIST=${TOOLS_DIR}/test/sanitizer-blacklist.txt
@@ -62,12 +75,6 @@ echo Configuring build \
     -DCMAKE_CXX_COMPILER=${ANALYZER} \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
     ${CMAKE_CONFIG_ARGS} \
- && echo Running scan-build \
- && time ${SCAN_BUILD} -o ${BUILD_DIR}/scan-build -V ninja -v \
- && test `ls -1 ${BUILD_DIR}/scan-build | wc -l` -eq 0 \
- && echo Running clang-format && ${TOOLS_DIR}/clang-format.sh ${SOURCE_DIR} \
-    ${BUILD_DIR} \
- && rm -rf ${BUILD_DIR}/CMake* \
  && echo Building with address and undefined behaviour sanitizers \
  && cmake -GNinja -DCMAKE_CXX_FLAGS="${ASAN_FLAGS}" \
     -DCMAKE_BUILD_TYPE=Debug ${ROOT_DIR} \
@@ -77,7 +84,7 @@ echo Configuring build \
  && echo Running tests with address and undefined behaviour sanitizers \
  && time ninja -v test \
  && echo Running clang-tidy \
- && ${TOOLS_DIR}/clang-tidy.sh ${SOURCE_DIR} ${BUILD_DIR} \
+ && ${TOOLS_DIR}/clang-tidy.sh ${SOURCEDIR} ${BUILDDIR} \
  && cmake -GNinja -DCMAKE_CXX_FLAGS="${TSAN_FLAGS}" \
     -DCMAKE_BUILD_TYPE=Debug ${ROOT_DIR} \
     ${CMAKE_CONFIG_ARGS} \
@@ -86,7 +93,7 @@ echo Configuring build \
  && time ninja -v \
  && echo Running tests with thread sanitizer \
  && time ninja -v test \
- && cd ${SOURCE_DIR}/build \
+ && cd ${SOURCEDIR}/build \
  && cmake \
     -GNinja \
     -DCMAKE_CXX_FLAGS="-O0 --coverage" \
@@ -97,10 +104,10 @@ echo Configuring build \
  && time ninja -v \
  && echo Running tests with coverage \
  && time ninja -v test \
- && cd ${SOURCE_DIR} \
+ && cd ${SOURCEDIR} \
  && (coveralls --gcov llvm-cov --gcov-options gcov --verbose \
               -E ".*gtest.*" -E ".*CMake.*" -E ".*test\/" \
               --build-root build \
- || gcovr -r /root --gcov-executable="llvm-cov gcov") \
- && cd ${BUILD_DIR} \
+ || gcovr -r ${ROOT_DIR} --gcov-executable="llvm-cov gcov") \
+ && cd ${BUILDDIR} \
  && ninja install
