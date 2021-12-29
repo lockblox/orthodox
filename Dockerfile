@@ -1,11 +1,11 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
-ENV VCPKG_ROOT="/opt/vcpkg"
-ENV CLANG_VERSION=8
-ENV GCC_VERSION=8
+ENV CLANG_VERSION=12
+ENV GCC_VERSION=10
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
+ && DEBIAN_FRONTEND=noninteractive \
+ apt-get install -y --no-install-recommends \
     build-essential \
     wget \
     rsync \
@@ -19,45 +19,64 @@ RUN apt-get update \
     vim \
     xz-utils \
     python \
-    python-pip \
+    python3-pip \
     gcc-${GCC_VERSION} \
     g++-${GCC_VERSION} \
+    libstdc++-${GCC_VERSION}-dev \
+    libc++-${GCC_VERSION}-dev \
     git \
     gdb \
     gcovr \
-    llvm \
     ccache \
+    cmake \
+    cppcheck \
     clang-${CLANG_VERSION} \
     clang-tidy-${CLANG_VERSION} \
     clang-format-${CLANG_VERSION} \
     clang-tools-${CLANG_VERSION} \
+    llvm-${CLANG_VERSION}-dev \
+    libclang-${CLANG_VERSION}-dev \
     ninja-build \
+    valgrind \
     libdigest-md5-file-perl \
-    libstdc++-8-dev \
-    libc++-7-dev \
  && apt-get -y autoremove \
  && apt-get -y clean \
  && updatedb
 
-RUN ln -s /usr/bin/clang-${CLANG_VERSION} /usr/bin/clang \
-  && ln -s /usr/bin/clang++-${CLANG_VERSION} /usr/bin/clang++ \
-  && ln -s /usr/bin/clang-tidy-${CLANG_VERSION} /usr/bin/clang-tidy \
-  && ln -s /usr/bin/clang-format-${CLANG_VERSION} /usr/bin/clang-format
+RUN ln -s /usr/bin/clang-${CLANG_VERSION} \
+         /usr/bin/clang \
+ && ln -s /usr/bin/clang++-${CLANG_VERSION} \
+         /usr/bin/clang++ \
+ && ln -s /usr/bin/clang-tidy-${CLANG_VERSION} \
+         /usr/bin/clang-tidy \
+ && ln -s /usr/bin/clang-format-${CLANG_VERSION} \
+         /usr/bin/clang-format \
+ && cd /usr/lib/llvm-${CLANG_VERSION}/share/clang \
+ && wget https://raw.githubusercontent.com/Sarcasm/run-clang-format/master/run-clang-format.py \
+ && chmod +x /usr/lib/llvm-${CLANG_VERSION}/share/clang/run-clang-format.py \
+ && cd /usr/bin \
+ && ln -s ../lib/llvm-${CLANG_VERSION}/share/clang/run-clang-tidy.py \
+         run-clang-tidy.py \
+ && ln -s ../lib/llvm-${CLANG_VERSION}/share/clang/run-clang-format.py \
+         run-clang-format.py \
+ && cd /usr/local/src \
+ && git clone https://github.com/include-what-you-use/include-what-you-use.git \
+ && cd include-what-you-use \
+ && git checkout clang_${CLANG_VERSION} \
+ && mkdir build \
+ && cd build \
+ && cmake -GNinja -DCMAKE_PREFIX_PATH=/usr/lib/llvm-${CLANG_VERSION} .. \
+ && ninja install
 
-RUN python -m pip install --upgrade pip \
+RUN python3 -m pip install --upgrade pip \
  && pip install requests \
  && pip install setuptools \
  && pip install wheel \
  && pip install pyyaml \
+ && pip install cpplint \
  && pip install cpp-coveralls
 
-RUN wget https://cmake.org/files/v3.15/cmake-3.15.0-Linux-x86_64.sh  \
-&& mkdir /opt/cmake \
-&& sh cmake-3.15.0-Linux-x86_64.sh --prefix=/opt/cmake --skip-license \
-&& ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake \
-&& rm cmake-3.15.0-Linux-x86_64.sh \
-&& cmake --version
-
+ENV VCPKG_ROOT="/usr/share/vcpkg"
 RUN mkdir ${VCPKG_ROOT} \
  && cd ${VCPKG_ROOT} \
  && git clone https://github.com/microsoft/vcpkg.git . \
@@ -65,7 +84,8 @@ RUN mkdir ${VCPKG_ROOT} \
  && ./vcpkg integrate install \
  && ./vcpkg install gtest
 
-WORKDIR /root/build
-ENV PATH="/usr/lib/ccache:${PATH}"
-COPY . /opt/orthodox
-ENTRYPOINT bash /opt/orthodox/build.sh /root/src
+ENV PATH="/usr/lib/ccache:/usr/share/orthodox:${PATH}"
+ENV SOURCEDIR="/usr/local/src/"
+WORKDIR /var/tmp/build
+COPY . /usr/share/orthodox
+ENTRYPOINT bash /usr/share/orthodox/build.sh
