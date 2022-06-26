@@ -3,6 +3,7 @@
 TOOLSDIR=`dirname $0`
 source ${TOOLSDIR}/common.sh
 
+export SCAN_BUILD=`locate scan-build | egrep "scan-build$" | head -1`
 export BUILDDIR=${BUILDROOT}/cmake-scan-build
-export CMAKE="scan-build cmake"
+export CMAKE="${SCAN_BUILD} cmake"
 run_cmake ${BUILDDIR}
