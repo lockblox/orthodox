@@ -4,7 +4,9 @@ TOOLSDIR=`dirname $0`
 source ${TOOLSDIR}/common.sh
 
 ASAN_FLAGS="-O1 -fsanitize=address,undefined"
-ASAN_FLAGS="${ASAN_FLAGS} -fno-omit-frame-pointer -fno-optimize-sibling-calls"
+ASAN_FLAGS="${ASAN_FLAGS} -fsanitize-blacklist=${SANITIZER_BLACKLIST}"
+ASAN_FLAGS="${ASAN_FLAGS} -fno-omit-frame-pointer -fno-optimize-sibling-calls -Wno-unknown-warning-option"
+
 echo Using ASAN flags: ${ASAN_FLAGS}
 
 export BUILDDIR=${BUILDROOT}/cmake-asan
