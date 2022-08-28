@@ -84,7 +84,7 @@ RUN mkdir ${VCPKG_ROOT} \
  && ./vcpkg integrate install \
  && ./vcpkg install gtest
 
-ENV PATH="/usr/lib/ccache:/usr/share/orthodox:${PATH}"
+ENV PATH="/usr/lib/ccache:/usr/lib/llvm-${CLANG_VERSION}/bin:/usr/share/orthodox:${PATH}"
 ENV SOURCEDIR="/usr/local/src/"
 ENV BUILDROOT="/var/tmp"
 WORKDIR /var/tmp/build
