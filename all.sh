@@ -1,4 +1,6 @@
-TOOLS_DIR=`dirname $0`
+#!/bin/bash
+
+TOOLS_DIR=`dirname $0` && \
 ${TOOLS_DIR}/asan.sh && \
 ${TOOLS_DIR}/clang.sh && \
 ${TOOLS_DIR}/clang-format.sh && \
