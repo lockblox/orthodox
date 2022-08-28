@@ -9,7 +9,7 @@ ASAN_FLAGS="${ASAN_FLAGS} -fno-omit-frame-pointer -fno-optimize-sibling-calls -W
 
 echo Using ASAN flags: ${ASAN_FLAGS}
 
-export BUILDDIR=${BUILDROOT}/cmake-asan
+export BUILDDIR=${BUILDROOT}/${PROJECT}-cmake-asan
 export CMAKE_CONFIG_ARGS="-DCMAKE_CXX_FLAGS=\"${ASAN_FLAGS}\" ${CMAKE_CONFIG_ARGS}"
 
 run_cmake ${BUILDDIR} \
