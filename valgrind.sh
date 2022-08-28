@@ -3,7 +3,7 @@
 TOOLSDIR=`dirname $0`
 source ${TOOLSDIR}/common.sh
 
-BUILDDIR=${BUILDROOT}/cmake-valgrind
+BUILDDIR=${BUILDROOT}/${PROJECT}-cmake-valgrind
 
 export MEMORYCHECK_COMMAND=`which valgrind`
 export MEMORYCHECK_COMMAND_OPTIONS="--leak-check=yes --show-reachable=yes --trace-children=yes --num-callers=20 --track-fds=yes"

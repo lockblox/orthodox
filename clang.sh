@@ -5,13 +5,13 @@ source ${TOOLSDIR}/common.sh
 
 echo Using CLANG flags: ${CLANG_FLAGS}
 
-BUILDDIR=${BUILDROOT}/cmake-clang
+BUILDDIR=${BUILDROOT}/${PROJECT}-cmake-clang
 CLANG_FLAGS="--system-header-prefix=boost 
             -Weverything 
             -Werror 
             -Wno-c++98-compat 
             -Wno-c++98-compat-pedantic 
-            -Wno-clang-diagnostic-unknown-warning-option"
+            -Wno-unknown-warning-option"
 
 export CC=clang
 export CXX=clang++

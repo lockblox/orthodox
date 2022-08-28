@@ -20,6 +20,7 @@ if [ ! -f ${SANITIZER_BLACKLIST} ]; then
 fi
 echo INFO: Using blacklist at ${SANITIZER_BLACKLIST}
 
+export PROJECT=`basename ${SOURCEDIR}`
 export CPUS=`lscpu | egrep "^CPU\(s\): *[0-9]" | tr -s " " | cut -d " " -f 2`
 export CC=clang
 export CXX=clang++
@@ -55,7 +56,8 @@ function run_cmake()
     && cd ${BUILDDIR} \
     && eval ${COMMAND} \
     && ${CMAKE} --version \
-    && ${CMAKE} --build ${BUILDDIR} --verbose --parallel ${CPUS}
+    && ${CMAKE} --build ${BUILDDIR} --verbose --parallel ${CPUS} \
+       ${CMAKE_RUN_ARGS}
 }
 
 function run_ctest()

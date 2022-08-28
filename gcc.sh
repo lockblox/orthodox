@@ -5,7 +5,7 @@ source ${TOOLSDIR}/common.sh
 
 echo Using GCC flags: ${GCC_FLAGS}
 
-BUILDDIR=${BUILDROOT}/cmake-gcc
+BUILDDIR=${BUILDROOT}/${PROJECT}-cmake-gcc
 GCC_FLAGS=" -O1 \
             -Wall \
             -Wextra \

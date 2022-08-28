@@ -8,7 +8,7 @@ TSAN_FLAGS="${TSAN_FLAGS} -fsanitize-blacklist=${SANITIZER_BLACKLIST}"
 
 echo Using TSAN flags: ${TSAN_FLAGS}
 
-export BUILDDIR=${BUILDROOT}/cmake-tsan
+export BUILDDIR=${BUILDROOT}/${PROJECT}-cmake-tsan
 export CMAKE_CONFIG_ARGS="-DCMAKE_CXX_FLAGS=\"${TSAN_FLAGS}\" ${CMAKE_CONFIG_ARGS}"
 
 run_cmake ${BUILDDIR} \

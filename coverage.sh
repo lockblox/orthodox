@@ -7,7 +7,7 @@ COV_FLAGS="-O0 --coverage"
 
 echo Using COV flags: ${COV_FLAGS}
 
-BUILDDIR=${BUILDROOT}/cmake-coverage
+BUILDDIR=${BUILDROOT}/${PROJECT}-cmake-coverage
 export CMAKE_CONFIG_ARGS="-DCMAKE_CXX_FLAGS=\"${COV_FLAGS}\" \
                           -DCMAKE_BUILD_TYPE=Debug \
                           ${CMAKE_CONFIG_ARGS}"

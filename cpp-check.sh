@@ -3,7 +3,7 @@
 TOOLSDIR=`dirname $0`
 source ${TOOLSDIR}/common.sh
 
-BUILDDIR=${BUILDROOT}/cmake-cpp-check
+BUILDDIR=${BUILDROOT}/${PROJECT}-cmake-cpp-check
 
 CPPCHECK_ARGS="cppcheck;\
 --cppcheck-build-dir=${BUILDDIR};\
