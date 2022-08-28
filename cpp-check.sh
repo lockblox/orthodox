@@ -13,5 +13,6 @@ CPPCHECK_ARGS="cppcheck;\
 --force;\
 --enable=all"
 export CMAKE_CONFIG_ARGS="-DCMAKE_CXX_CPPCHECK=\"${CPPCHECK_ARGS}\" ${CMAKE_CONFIG_ARGS}"
+export CMAKE_RUN_ARGS="--clean-first"
 
 run_cmake ${BUILDDIR}
