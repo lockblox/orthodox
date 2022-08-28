@@ -86,6 +86,7 @@ RUN mkdir ${VCPKG_ROOT} \
 
 ENV PATH="/usr/lib/ccache:/usr/share/orthodox:${PATH}"
 ENV SOURCEDIR="/usr/local/src/"
+ENV BUILDROOT="/var/tmp"
 WORKDIR /var/tmp/build
 COPY . /usr/share/orthodox
 ENTRYPOINT bash /usr/share/orthodox/build.sh
