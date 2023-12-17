@@ -1,7 +1,7 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
-ENV CLANG_VERSION=12
-ENV GCC_VERSION=10
+ENV CLANG_VERSION=15
+ENV GCC_VERSION=12
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
@@ -18,8 +18,9 @@ RUN apt-get update \
     zip \
     vim \
     xz-utils \
-    python \
+    python3 \
     python3-pip \
+    python-is-python3 \
     gcc-${GCC_VERSION} \
     g++-${GCC_VERSION} \
     libstdc++-${GCC_VERSION}-dev \
@@ -28,9 +29,11 @@ RUN apt-get update \
     gdb \
     gcovr \
     ccache \
+    distcc \
     cmake \
     cppcheck \
     clang-${CLANG_VERSION} \
+    clangd-${CLANG_VERSION} \
     clang-tidy-${CLANG_VERSION} \
     clang-format-${CLANG_VERSION} \
     clang-tools-${CLANG_VERSION} \
@@ -74,19 +77,12 @@ RUN python3 -m pip install --upgrade pip \
  && pip install wheel \
  && pip install pyyaml \
  && pip install cpplint \
- && pip install cpp-coveralls
-
-ENV VCPKG_ROOT="/usr/share/vcpkg"
-RUN mkdir ${VCPKG_ROOT} \
- && cd ${VCPKG_ROOT} \
- && git clone https://github.com/microsoft/vcpkg.git . \
- && ./bootstrap-vcpkg.sh \
- && ./vcpkg integrate install \
- && ./vcpkg install gtest
+ && pip install cpp-coveralls \
+ && pip install cmake-format
 
 ENV PATH="/usr/lib/ccache:/usr/lib/llvm-${CLANG_VERSION}/bin:/usr/share/orthodox:${PATH}"
 ENV SOURCEDIR="/usr/local/src/"
 ENV BUILDROOT="/var/tmp"
 WORKDIR /var/tmp/build
 COPY . /usr/share/orthodox
-ENTRYPOINT bash /usr/share/orthodox/build.sh
+ENTRYPOINT bash /usr/share/orthodox/all.sh
