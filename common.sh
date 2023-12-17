@@ -20,6 +20,7 @@ if [ ! -f ${SANITIZER_BLACKLIST} ]; then
 fi
 echo INFO: Using blacklist at ${SANITIZER_BLACKLIST}
 
+export LANG=C
 export PROJECT=`basename ${SOURCEDIR}`
 export CPUS=`lscpu | egrep "^CPU\(s\): *[0-9]" | tr -s " " | cut -d " " -f 2`
 export CC=clang
@@ -27,9 +28,7 @@ export CXX=clang++
 export CCC_CC=${CC}
 export CCC_CXX=${CXX}
 export NINJA=`which ninja`
-export VCPKG_TOOLCHAIN="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-export VCPKG_INSTALLED_DIR="${BUILDROOT}"
-export CMAKE_TOOLCHAIN="-DCMAKE_TOOLCHAIN_FILE=${VCPKG_TOOLCHAIN}"
+export CMAKE_TOOLCHAIN=""
 export CMAKE_EXPORT_COMMANDS="-DCMAKE_EXPORT_COMPILE_COMMANDS=1"
 export CMAKE_CONFIG_ARGS="-DCMAKE_MAKE_PROGRAM=${NINJA} -GNinja"
 export CMAKE_CONFIG_ARGS="${CMAKE_TOOLCHAIN} ${CMAKE_CONFIG_ARGS}"

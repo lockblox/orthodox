@@ -49,8 +49,7 @@ export ASAN_OPTIONS=symbolize=1
 export CTEST_OUTPUT_ON_FAILURE=1
 export ANALYZER=`locate c++-analyzer | egrep "c\+\+-analyzer$" | head -1`
 export SCAN_BUILD=`locate scan-build | egrep "scan-build$" | head -1`
-export VCPKG_TOOLCHAIN="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-export CMAKE_TOOLCHAIN="-DCMAKE_TOOLCHAIN_FILE=${VCPKG_TOOLCHAIN}"
+export CMAKE_TOOLCHAIN=""
 export CMAKE_CONFIG_ARGS="${CMAKE_TOOLCHAIN} ${CMAKE_CONFIG_ARGS}"
 
 ${TOOLS_DIR}/cpp-check.sh
